@@ -3,19 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.SignUpFragment">
+    tools:context=".fragments.RegAuthFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <EditText
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@id/etEmail"
-            app:layout_constraintLeft_toLeftOf="@id/etEmail"
-            app:layout_constraintRight_toRightOf="@id/etEmail"
-            android:hint="@string/et_hint_name"/>
 
         <EditText
             android:id="@+id/etEmail"
@@ -26,7 +18,7 @@
             android:inputType="text|textEmailAddress"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/etPassword"/>
+            app:layout_constraintBottom_toTopOf="@id/etPassword" />
 
         <EditText
             android:id="@+id/etPassword"
@@ -41,9 +33,8 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/btSignUp"
+            android:id="@+id/bt"
             android:layout_width="0dp"
-            android:text = "@string/sign_up"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@+id/etPassword"
             app:layout_constraintStart_toStartOf="@+id/etPassword"

@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
@@ -24,14 +25,14 @@ class ProfileFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         auth = Firebase.auth
-        model.liveDataAuth.value = auth
     }
 
     override fun onStart() {
         super.onStart()
         val currentUser = auth.currentUser
         if (currentUser != null) {
-            navController.navigate(R.id.action_profileFragment_to_loggedInFragment)
+            model.user.value = currentUser
+            navController.navigate(R.id.action_profileFragment_to_logInFragment)
         }
     }
 
@@ -40,11 +41,16 @@ class ProfileFragment : Fragment() {
         navController = Navigation.findNavController(requireView())
 
         btLogIn.setOnClickListener {
-            navController.navigate(R.id.action_profileFragment_to_logInFragment)
+            transition(btLogIn)
         }
         btSignUp.setOnClickListener {
-            navController.navigate(R.id.action_profileFragment_to_signUpFragment)
+            transition(btSignUp)
         }
+    }
+
+    private fun transition(bt: Button) {
+        model.btClickedProfileFragment.value = bt.text.toString()
+        navController.navigate(R.id.action_profileFragment_to_RegAuthFragment)
     }
 
     override fun onCreateView(

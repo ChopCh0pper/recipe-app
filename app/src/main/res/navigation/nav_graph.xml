@@ -20,25 +20,21 @@
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" >
         <action
-            android:id="@+id/action_profileFragment_to_signUpFragment"
-            app:destination="@id/signUpFragment" />
-        <action
-            android:id="@+id/action_profileFragment_to_loggedInFragment"
-            app:destination="@id/loggedInFragment" />
+            android:id="@+id/action_profileFragment_to_RegAuthFragment"
+            app:destination="@id/RegAuthFragment" />
         <action
             android:id="@+id/action_profileFragment_to_logInFragment"
             app:destination="@id/logInFragment" />
     </fragment>
     <fragment
-        android:id="@+id/signUpFragment"
-        android:name="com.example.recipeapplication.fragments.SignUpFragment"
+        android:id="@+id/RegAuthFragment"
+        android:name="com.example.recipeapplication.fragments.RegAuthFragment"
         android:label="fragment_sign_up"
-        tools:layout="@layout/fragment_sign_up" />
-    <fragment
-        android:id="@+id/loggedInFragment"
-        android:name="com.example.recipeapplication.fragments.LoggedInFragment"
-        android:label="fragment_logged_in"
-        tools:layout="@layout/fragment_logged_in" />
+        tools:layout="@layout/fragment_reg_auth" >
+        <action
+            android:id="@+id/action_RegAuthFragment_to_logInFragment"
+            app:destination="@id/logInFragment" />
+    </fragment>
     <fragment
         android:id="@+id/logInFragment"
         android:name="com.example.recipeapplication.fragments.LogInFragment"
