@@ -39,5 +39,18 @@
             app:layout_constraintTop_toBottomOf="@+id/etPassword"
             app:layout_constraintStart_toStartOf="@+id/etPassword"
             app:layout_constraintEnd_toEndOf="@+id/etPassword" />
+
+        <TextView
+            android:id="@+id/tvForgotPass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/forgot_pass"
+            app:layout_constraintTop_toBottomOf="@id/bt"
+            app:layout_constraintLeft_toLeftOf="@id/bt"
+            app:layout_constraintRight_toRightOf="@id/bt"
+            android:clickable="true"
+            android:textSize="15sp"
+            android:layout_marginTop="5dp"
+            android:visibility="gone"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

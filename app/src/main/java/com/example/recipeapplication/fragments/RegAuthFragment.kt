@@ -17,6 +17,7 @@ import com.example.recipeapplication.MainViewModel
 import com.example.recipeapplication.R
 import com.example.recipeapplication.databinding.FragmentRegAuthBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
@@ -39,11 +40,14 @@ class RegAuthFragment : Fragment() {
             bt.text = it
 
             when(it) {
-                getString(R.string.log_in) ->
+                getString(R.string.log_in) -> {
                     bt.setOnClickListener {
                         if (validityCheck(etEmail, etPassword))
                             logIn(etEmail.text.toString(), etPassword.text.toString())
                     }
+                    tvForgotPass.visibility = View.VISIBLE
+                    tvForgotPass.setOnClickListener {  }
+                }
 
                 getString(R.string.sign_up) ->
                     bt.setOnClickListener {
@@ -94,7 +98,7 @@ class RegAuthFragment : Fragment() {
                     ).show()
                     val user = auth.currentUser
                     model.user.value = user
-                    navController.navigate(R.id.action_RegAuthFragment_to_logInFragment)
+                    sendEmailVerification(user!!)
                 } else {
                     Log.w(TAG, "createUserWithEmail:failure", it.exception)
                     Toast.makeText(
@@ -102,6 +106,15 @@ class RegAuthFragment : Fragment() {
                         "Authentication failed.",
                         Toast.LENGTH_SHORT
                     ).show()
+                }
+            }
+    }
+
+    private fun sendEmailVerification(user: FirebaseUser) {
+        user.sendEmailVerification()
+            .addOnCompleteListener {
+                if (it.isSuccessful) {
+                    navController.navigate(R.id.action_RegAuthFragment_to_logInFragment)
                 }
             }
     }

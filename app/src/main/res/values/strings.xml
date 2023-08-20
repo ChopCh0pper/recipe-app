@@ -7,4 +7,7 @@
     <string name="et_hint_email">Email</string>
     <string name="et_hint_password">Password</string>
     <string name="et_hint_name">Name</string>
+    <string name="forgot_pass">Forgot your password?</string>
+    <string name="confirm_email">Please confirm your email address.</string>
+    <string name="resend">Resend</string>
 </resources>
