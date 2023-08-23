@@ -32,6 +32,19 @@ class LogInFragment : Fragment() {
         navController = Navigation.findNavController(requireView())
 
         btExit.setOnClickListener { signOut() }
+        btResend.setOnClickListener { sendEmailVerification(auth.currentUser) }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        model.user.observe(viewLifecycleOwner) {user ->
+            if (user != null) {
+                if (user.isEmailVerified) updateUI(user)
+                else user.reload()
+            } else {
+                navController.navigate(R.id.action_logInFragment_to_profileFragment)
+            }
+        }
     }
 
     private fun signOut() {
