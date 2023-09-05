@@ -12,24 +12,23 @@ import androidx.navigation.Navigation
 import com.example.recipeapplication.MainViewModel
 import com.example.recipeapplication.R
 import com.example.recipeapplication.databinding.FragmentProfileBinding
+import com.example.recipeapplication.utils.AUTH
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
 class ProfileFragment : Fragment() {
     private lateinit var binding: FragmentProfileBinding
-    private lateinit var auth: FirebaseAuth
     private lateinit var navController: NavController
     private val model: MainViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        auth = Firebase.auth
     }
 
     override fun onStart() {
         super.onStart()
-        val currentUser = auth.currentUser
+        val currentUser = AUTH.currentUser
         if (currentUser != null) {
             model.user.value = currentUser
             navController.navigate(R.id.action_profileFragment_to_logInFragment)

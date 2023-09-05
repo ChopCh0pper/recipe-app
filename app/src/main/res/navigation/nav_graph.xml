@@ -43,5 +43,37 @@
         <action
             android:id="@+id/action_logInFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_logInFragment_to_favoritesFragment"
+            app:destination="@id/favoritesFragment" />
+        <action
+            android:id="@+id/action_logInFragment_to_myRecipesFragment"
+            app:destination="@id/myRecipesFragment" />
+        <action
+            android:id="@+id/action_logInFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_logInFragment_to_aboutUsFragment"
+            app:destination="@id/aboutUsFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/favoritesFragment"
+        android:name="com.example.recipeapplication.fragments.FavoritesFragment"
+        android:label="fragment_favorites"
+        tools:layout="@layout/fragment_favorites" />
+    <fragment
+        android:id="@+id/myRecipesFragment"
+        android:name="com.example.recipeapplication.fragments.MyRecipesFragment"
+        android:label="fragment_my_recipes"
+        tools:layout="@layout/fragment_my_recipes" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.recipeapplication.fragments.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/aboutUsFragment"
+        android:name="com.example.recipeapplication.fragments.AboutUsFragment"
+        android:label="fragment_about_us"
+        tools:layout="@layout/fragment_about_us" />
 </navigation>

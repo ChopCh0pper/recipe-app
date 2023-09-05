@@ -7,61 +7,102 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.recipeapplication.MainViewModel
 import com.example.recipeapplication.R
 import com.example.recipeapplication.databinding.FragmentLogInBinding
+import com.example.recipeapplication.models.User
+import com.example.recipeapplication.utils.AUTH
+import com.example.recipeapplication.utils.NODE_USERS
+import com.example.recipeapplication.utils.REF_DATABASE_ROOT
+import com.example.recipeapplication.utils.UID
+import com.example.recipeapplication.utils.USER
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 class LogInFragment : Fragment() {
     private lateinit var binding: FragmentLogInBinding
     private val model: MainViewModel by activityViewModels()
     private lateinit var navController: NavController
-    private lateinit var auth: FirebaseAuth
+    private var awaitForEmailConfirmCoroutine: Job? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initFields()
 
-        auth = FirebaseAuth.getInstance()
-        navController = Navigation.findNavController(requireView())
-
-        btExit.setOnClickListener { signOut() }
-        btResend.setOnClickListener { sendEmailVerification(auth.currentUser) }
-    }
-
-    override fun onResume() {
-        super.onResume()
         model.user.observe(viewLifecycleOwner) {user ->
             if (user != null) {
-                if (user.isEmailVerified) updateUI(user)
-                else user.reload()
+                if (user.isEmailVerified) {
+                    updateUI()
+                }
+                else {
+                    awaitForEmailConfirmCoroutine?.cancel()
+                    awaitForEmailConfirmCoroutine = lifecycleScope.launch(Dispatchers.IO) {
+                        while (true) {
+                            val user: FirebaseUser = AUTH.currentUser ?: return@launch
+                            user.reload().await()
+                            if (user.isEmailVerified) {
+                                withContext(Dispatchers.Main) {
+                                    model.user.value = user
+                                }
+                                return@launch
+                            }
+                            delay(5000)
+                        }
+                    }
+                }
             } else {
                 navController.navigate(R.id.action_logInFragment_to_profileFragment)
             }
         }
     }
 
+    private fun initFields() = with(binding) {
+        navController = Navigation.findNavController(requireView())
+        btExit.setOnClickListener { signOut() }
+        btResend.setOnClickListener { sendEmailVerification(AUTH.currentUser) }
+        btFavorites.setOnClickListener { navController.navigate(R.id.action_logInFragment_to_favoritesFragment) }
+        btMyRecipes.setOnClickListener { navController.navigate(R.id.action_logInFragment_to_myRecipesFragment) }
+        btSettings.setOnClickListener { navController.navigate(R.id.action_logInFragment_to_settingsFragment) }
+        btAboutUs.setOnClickListener { navController.navigate(R.id.action_logInFragment_to_aboutUsFragment) }
+    }
+
     private fun signOut() {
-        auth.signOut()
-        model.user.value = auth.currentUser
+        AUTH.signOut()
+        model.user.value = AUTH.currentUser
         navController.navigate(R.id.profileFragment)
     }
 
-    private fun updateUI(user: FirebaseUser?) = with(binding) {
-        if (user != null) {
-            tvConfirmEmail.visibility = View.GONE
-            btResend.visibility = View.GONE
-            tv.visibility = View.VISIBLE
-            btExit.visibility = View.VISIBLE
+    private fun updateUI() = with(binding) {
+        cvAvatar.visibility = View.VISIBLE
+        tvName.visibility = View.VISIBLE
+        tvPersonal.visibility = View.VISIBLE
+        tvAppName.visibility = View.VISIBLE
+        btFavorites.visibility = View.VISIBLE
+        btMyRecipes.visibility = View.VISIBLE
+        btSettings.visibility = View.VISIBLE
+        btAboutUs.visibility = View.VISIBLE
+        btExit.visibility = View.VISIBLE
 
-            tv.text = user.email
-        }
+        btResend.visibility = View.GONE
+        tvConfirmEmail.visibility = View.GONE
+
+        tvName.text = USER.username
     }
 
     private fun sendEmailVerification(user: FirebaseUser?) {
@@ -70,13 +111,13 @@ class LogInFragment : Fragment() {
                 if (it.isSuccessful) {
                     Toast.makeText(
                         requireContext(),
-                        "The letter has been sent.",
+                        getString(R.string.toast_msg_sending_letter_successfully),
                         Toast.LENGTH_SHORT
                     ).show()
                 } else {
                     Toast.makeText(
                         requireContext(),
-                        "An error has occurred, please try again later.",
+                        getString(R.string.toast_msg_sending_letter_failed),
                         Toast.LENGTH_SHORT
                     )
                 }

@@ -16,20 +16,24 @@ import androidx.navigation.Navigation
 import com.example.recipeapplication.MainViewModel
 import com.example.recipeapplication.R
 import com.example.recipeapplication.databinding.FragmentRegAuthBinding
+import com.example.recipeapplication.utils.AUTH
+import com.example.recipeapplication.utils.CHILD_ID
+import com.example.recipeapplication.utils.CHILD_USERNAME
+import com.example.recipeapplication.utils.NODE_USERS
+import com.example.recipeapplication.utils.REF_DATABASE_ROOT
+import com.example.recipeapplication.utils.UID
+import com.example.recipeapplication.utils.initUser
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
-const val TAG = "TAG"
 class RegAuthFragment : Fragment() {
     private lateinit var binding: FragmentRegAuthBinding
-    private lateinit var auth: FirebaseAuth
     private val model: MainViewModel by activityViewModels()
     private lateinit var navController: NavController
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        auth = Firebase.auth
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
@@ -78,7 +82,7 @@ class RegAuthFragment : Fragment() {
                 .valueOf(ContextCompat.getColor(requireContext(), R.color.errorColor))
             Toast.makeText(
                 requireContext(),
-                "Invalid email or password.",
+                getString(R.string.toast_msg_validityCheck),
                 Toast.LENGTH_SHORT
             ).show()
             return false
@@ -87,23 +91,27 @@ class RegAuthFragment : Fragment() {
     }
 
     private fun createAccount(email: String, password: String){
-        auth.createUserWithEmailAndPassword(email, password)
+        AUTH.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener {
                 if (it.isSuccessful) {
-                    Log.d(TAG, "createUserWithEmail:success")
                     Toast.makeText(
                         requireContext(),
-                        "Account created successfully.",
+                        getString(R.string.toast_msg_signup_successfully),
                         Toast.LENGTH_SHORT
                     ).show()
-                    val user = auth.currentUser
+                    val user = AUTH.currentUser
                     model.user.value = user
+                    UID = AUTH.currentUser?.uid.toString()
+                    val dataMap = mutableMapOf<String, Any>()
+                    dataMap[CHILD_ID] = UID
+                    dataMap[CHILD_USERNAME] = UID
+                    REF_DATABASE_ROOT.child(NODE_USERS).child(UID).updateChildren(dataMap)
+                    initUser()
                     sendEmailVerification(user!!)
                 } else {
-                    Log.w(TAG, "createUserWithEmail:failure", it.exception)
                     Toast.makeText(
                         requireContext(),
-                        "Authentication failed.",
+                        getString(R.string.toast_msg_signup_failed),
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -120,18 +128,18 @@ class RegAuthFragment : Fragment() {
     }
 
     private fun logIn(email: String, password: String) {
-        auth.signInWithEmailAndPassword(email, password)
+        AUTH.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener {
                 if (it.isSuccessful) {
-                    Log.d(TAG, "signInWithEmail:success")
-                    val user = auth.currentUser
+                    val user = AUTH.currentUser
+                    UID = AUTH.currentUser?.uid.toString()
                     model.user.value = user
+                    initUser()
                     navController.navigate(R.id.action_RegAuthFragment_to_logInFragment)
                 } else {
-                    Log.w(TAG, "signInWithEmail:failure", it.exception)
                     Toast.makeText(
                         requireContext(),
-                        "Authentication failed.",
+                        getString(R.string.toast_msg_login_failed),
                         Toast.LENGTH_SHORT,
                     ).show()
                 }
