@@ -4,154 +4,163 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.LoggedInFragment"
-    android:background="@color/app_bg">
+    android:background="@color/app_bg"
+    tools:context=".fragments.LoggedInFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clFirst"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="visible">
 
-                <TextView
-                    android:id="@+id/tvConfirmEmail"
-                    android:text="@string/confirm_email"
-                    android:textSize="18sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"/>
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btResend"
-                    android:text="@string/resend"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/tvConfirmEmail"
-                    app:layout_constraintLeft_toLeftOf="@id/tvConfirmEmail"
-                    app:layout_constraintRight_toRightOf="@id/tvConfirmEmail"
-                    android:background="@drawable/bt_bg"/>
-
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+        <TextView
+            android:id="@+id/tvConfirmEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/confirm_email"
+            android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btResend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bt_bg"
+            android:text="@string/resend"
+            app:layout_constraintLeft_toLeftOf="@id/tvConfirmEmail"
+            app:layout_constraintRight_toRightOf="@id/tvConfirmEmail"
+            app:layout_constraintTop_toBottomOf="@id/tvConfirmEmail" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clSecond"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cvAvatar"
+            android:layout_width="85dp"
+            android:layout_height="85dp"
+            android:layout_marginTop="40dp"
+            android:layout_gravity="center"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:cardCornerRadius="100dp">
+
+            <ImageView
+                android:id="@+id/imAvatar"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="40dp">
+                android:scaleType="centerCrop" />
+        </androidx.cardview.widget.CardView>
 
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/cvAvatar"
-                    android:layout_width="85dp"
-                    android:layout_height="85dp"
-                    android:layout_gravity="center"
-                    app:cardCornerRadius="100dp"
-                    android:visibility="gone">
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:text="SDffgafdg"
+            android:textSize="18sp"
+            app:layout_constraintTop_toBottomOf="@id/cvAvatar"
+            app:layout_constraintLeft_toLeftOf="@id/cvAvatar"
+            app:layout_constraintRight_toRightOf="@id/cvAvatar"/>
 
-                    <ImageView
-                        android:id="@+id/imAvatar"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:scaleType="centerCrop" />
-                </androidx.cardview.widget.CardView>
+        <ImageButton
+            android:id="@+id/ibtChangeName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:src="@drawable/baseline_edit_24"
+            app:layout_constraintRight_toLeftOf="@id/tvName"
+            app:layout_constraintTop_toTopOf="@id/tvName"
+            app:layout_constraintBottom_toBottomOf="@id/tvName"/>
 
-                <TextView
-                    android:id="@+id/tvName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:textSize="18sp"
-                    android:layout_marginTop="3dp"
-                    android:visibility="gone"/>
+        <TextView
+            android:id="@+id/tvPersonal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="30dp"
+            android:text="@string/personal"
+            android:textSize="15sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvName"/>
 
-                <TextView
-                    android:id="@+id/tvPersonal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/personal"
-                    android:textSize="15sp"
-                    android:layout_marginTop="30dp"
-                    android:layout_marginLeft="5dp"
-                    android:visibility="gone"/>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btFavorites"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/bt_bg"
+            android:drawableRight="@drawable/baseline_east_24"
+            android:gravity="left|center_vertical"
+            android:text="@string/favorites"
+            android:textSize="18sp"
+            app:layout_constraintTop_toBottomOf="@id/tvPersonal" />
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btFavorites"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="left|center_vertical"
-                    android:text="@string/favorites"
-                    android:textSize="18sp"
-                    android:layout_marginBottom="5dp"
-                    android:background="@drawable/bt_bg"
-                    android:drawableRight="@drawable/baseline_east_24"
-                    android:visibility="gone"/>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btMyRecipes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bt_bg"
+            android:drawableRight="@drawable/baseline_east_24"
+            android:gravity="left|center_vertical"
+            android:text="@string/my_recipes"
+            android:textSize="18sp"
+            app:layout_constraintTop_toBottomOf="@id/btFavorites" />
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btMyRecipes"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="left|center_vertical"
-                    android:text="@string/my_recipes"
-                    android:textSize="18sp"
-                    android:background="@drawable/bt_bg"
-                    android:drawableRight="@drawable/baseline_east_24"
-                    android:visibility="gone"/>
+        <TextView
+            android:id="@+id/tvAppName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="30dp"
+            android:text="@string/app_name"
+            android:textSize="15sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btMyRecipes"/>
 
-                <TextView
-                    android:id="@+id/tvAppName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/app_name"
-                    android:textSize="15sp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginTop="30dp"
-                    android:visibility="gone"/>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btSettings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/bt_bg"
+            android:drawableRight="@drawable/baseline_east_24"
+            android:gravity="left|center_vertical"
+            android:text="@string/settings"
+            android:textSize="18sp"
+            app:layout_constraintTop_toBottomOf="@id/tvAppName" />
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btSettings"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="left|center_vertical"
-                    android:text="@string/settings"
-                    android:textSize="18sp"
-                    android:layout_marginBottom="5dp"
-                    android:background="@drawable/bt_bg"
-                    android:drawableRight="@drawable/baseline_east_24"
-                    android:visibility="gone"/>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btAboutUs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/bt_bg"
+            android:drawableRight="@drawable/baseline_east_24"
+            android:gravity="left|center_vertical"
+            android:text="@string/about_us"
+            android:textSize="18sp"
+            app:layout_constraintTop_toBottomOf="@id/btSettings" />
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btAboutUs"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="left|center_vertical"
-                    android:text="@string/about_us"
-                    android:textSize="18sp"
-                    android:layout_marginBottom="5dp"
-                    android:background="@drawable/bt_bg"
-                    android:drawableRight="@drawable/baseline_east_24"
-                    android:visibility="gone"/>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btExit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bt_bg"
+            android:drawableRight="@drawable/baseline_east_24"
+            android:gravity="left|center_vertical"
+            android:text="@string/exit"
+            android:textSize="18sp"
+            app:layout_constraintTop_toBottomOf="@id/btAboutUs" />
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btExit"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="left|center_vertical"
-                    android:text="@string/exit"
-                    android:textSize="18sp"
-                    android:background="@drawable/bt_bg"
-                    android:drawableRight="@drawable/baseline_east_24"
-                    android:visibility="gone"/>
-
-
-            </LinearLayout>
-        </ScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

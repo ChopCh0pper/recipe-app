@@ -13,18 +13,11 @@ import androidx.navigation.Navigation
 import com.example.recipeapplication.MainViewModel
 import com.example.recipeapplication.R
 import com.example.recipeapplication.databinding.FragmentLogInBinding
-import com.example.recipeapplication.models.User
 import com.example.recipeapplication.utils.AUTH
-import com.example.recipeapplication.utils.NODE_USERS
-import com.example.recipeapplication.utils.REF_DATABASE_ROOT
 import com.example.recipeapplication.utils.UID
 import com.example.recipeapplication.utils.USER
-import com.google.firebase.auth.FirebaseAuth
+import com.example.recipeapplication.utils.initUser
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -85,22 +78,14 @@ class LogInFragment : Fragment() {
     private fun signOut() {
         AUTH.signOut()
         model.user.value = AUTH.currentUser
+        UID = AUTH.currentUser?.uid.toString()
+        initUser()
         navController.navigate(R.id.profileFragment)
     }
 
     private fun updateUI() = with(binding) {
-        cvAvatar.visibility = View.VISIBLE
-        tvName.visibility = View.VISIBLE
-        tvPersonal.visibility = View.VISIBLE
-        tvAppName.visibility = View.VISIBLE
-        btFavorites.visibility = View.VISIBLE
-        btMyRecipes.visibility = View.VISIBLE
-        btSettings.visibility = View.VISIBLE
-        btAboutUs.visibility = View.VISIBLE
-        btExit.visibility = View.VISIBLE
-
-        btResend.visibility = View.GONE
-        tvConfirmEmail.visibility = View.GONE
+        clFirst.visibility = View.GONE
+        clSecond.visibility = View.VISIBLE
 
         tvName.text = USER.username
     }

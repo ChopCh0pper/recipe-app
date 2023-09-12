@@ -70,7 +70,7 @@ class RegAuthFragment : Fragment() {
         return binding.root
     }
 
-    internal fun EditText.isEmailValid(): Boolean {
+    private fun EditText.isEmailValid(): Boolean {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(this.text.toString()).matches()
     }
 
@@ -133,8 +133,8 @@ class RegAuthFragment : Fragment() {
                 if (it.isSuccessful) {
                     val user = AUTH.currentUser
                     UID = AUTH.currentUser?.uid.toString()
-                    model.user.value = user
                     initUser()
+                    model.user.value = user
                     navController.navigate(R.id.action_RegAuthFragment_to_logInFragment)
                 } else {
                     Toast.makeText(
