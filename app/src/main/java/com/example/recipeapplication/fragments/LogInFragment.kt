@@ -1,16 +1,16 @@
 package com.example.recipeapplication.fragments
 
 import android.os.Bundle
-import android.text.Editable
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import com.example.recipeapplication.MainActivity
 import com.example.recipeapplication.MainViewModel
 import com.example.recipeapplication.R
 import com.example.recipeapplication.databinding.FragmentLogInBinding
@@ -18,10 +18,12 @@ import com.example.recipeapplication.utils.AUTH
 import com.example.recipeapplication.utils.CHILD_USERNAME
 import com.example.recipeapplication.utils.NODE_USERS
 import com.example.recipeapplication.utils.REF_DATABASE_ROOT
-import com.example.recipeapplication.utils.UID
+import com.example.recipeapplication.utils.UIDCURRENT_UID
 import com.example.recipeapplication.utils.USER
 import com.example.recipeapplication.utils.initUser
 import com.google.firebase.auth.FirebaseUser
+import com.theartofdev.edmodo.cropper.CropImage
+import com.theartofdev.edmodo.cropper.CropImageView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -78,12 +80,21 @@ class LogInFragment : Fragment() {
         btAboutUs.setOnClickListener { navController.navigate(R.id.action_logInFragment_to_aboutUsFragment) }
         ibtChangeName.setOnClickListener { updateFieldName(tvName.visibility) }
         ibtDone.setOnClickListener { changeUserName() }
+        cvAvatar.setOnClickListener { changeAvatar() }
+    }
+
+    private fun changeAvatar() {
+        CropImage.activity()
+            .setAspectRatio(1, 1)
+            .setRequestedSize(600, 600)
+            .setCropShape(CropImageView.CropShape.OVAL)
+            .start(activity as MainActivity)
     }
 
     private fun changeUserName() {
         val name = binding.etChangeName.text.toString()
         if (name.isNotEmpty()) {
-            REF_DATABASE_ROOT.child(NODE_USERS).child(UID)
+            REF_DATABASE_ROOT.child(NODE_USERS).child(UIDCURRENT_UID)
                 .child(CHILD_USERNAME).setValue(name)
             USER.username = name
             updateFieldName(binding.tvName.visibility)
@@ -121,7 +132,7 @@ class LogInFragment : Fragment() {
     private fun signOut() {
         AUTH.signOut()
         model.user.value = AUTH.currentUser
-        UID = AUTH.currentUser?.uid.toString()
+        UIDCURRENT_UID = AUTH.currentUser?.uid.toString()
         initUser()
         navController.navigate(R.id.profileFragment)
     }
