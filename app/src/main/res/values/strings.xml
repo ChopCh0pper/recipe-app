@@ -22,4 +22,5 @@
     <string name="toast_msg_login_failed">Authentication failed.</string>
     <string name="toast_msg_sending_letter_successfully">The letter has been sent.</string>
     <string name="toast_msg_sending_letter_failed">An error has occurred, please try again later.</string>
+    <string name="toast_msg_change_name_field">The field must not be empty.</string>
 </resources>

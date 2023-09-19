@@ -1,6 +1,7 @@
 package com.example.recipeapplication.fragments
 
 import android.os.Bundle
+import android.text.Editable
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +15,9 @@ import com.example.recipeapplication.MainViewModel
 import com.example.recipeapplication.R
 import com.example.recipeapplication.databinding.FragmentLogInBinding
 import com.example.recipeapplication.utils.AUTH
+import com.example.recipeapplication.utils.CHILD_USERNAME
+import com.example.recipeapplication.utils.NODE_USERS
+import com.example.recipeapplication.utils.REF_DATABASE_ROOT
 import com.example.recipeapplication.utils.UID
 import com.example.recipeapplication.utils.USER
 import com.example.recipeapplication.utils.initUser
@@ -38,12 +42,11 @@ class LogInFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initFields()
 
-        model.user.observe(viewLifecycleOwner) {user ->
+        model.user.observe(viewLifecycleOwner) { user ->
             if (user != null) {
                 if (user.isEmailVerified) {
                     updateUI()
-                }
-                else {
+                } else {
                     awaitForEmailConfirmCoroutine?.cancel()
                     awaitForEmailConfirmCoroutine = lifecycleScope.launch(Dispatchers.IO) {
                         while (true) {
@@ -73,6 +76,46 @@ class LogInFragment : Fragment() {
         btMyRecipes.setOnClickListener { navController.navigate(R.id.action_logInFragment_to_myRecipesFragment) }
         btSettings.setOnClickListener { navController.navigate(R.id.action_logInFragment_to_settingsFragment) }
         btAboutUs.setOnClickListener { navController.navigate(R.id.action_logInFragment_to_aboutUsFragment) }
+        ibtChangeName.setOnClickListener { updateFieldName(tvName.visibility) }
+        ibtDone.setOnClickListener { changeUserName() }
+    }
+
+    private fun changeUserName() {
+        val name = binding.etChangeName.text.toString()
+        if (name.isNotEmpty()) {
+            REF_DATABASE_ROOT.child(NODE_USERS).child(UID)
+                .child(CHILD_USERNAME).setValue(name)
+            USER.username = name
+            updateFieldName(binding.tvName.visibility)
+        } else {
+            Toast.makeText(
+                context,
+                getString(R.string.toast_msg_change_name_field),
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    private fun updateFieldName(visibility: Int) = with(binding) {
+        when (visibility) {
+            View.VISIBLE -> {
+                tvName.visibility = View.GONE
+                ibtChangeName.visibility = View.GONE
+                etChangeName.visibility = View.VISIBLE
+                ibtDone.visibility = View.VISIBLE
+
+                etChangeName.setText(tvName.text)
+            }
+
+            View.GONE -> {
+                tvName.visibility = View.VISIBLE
+                ibtChangeName.visibility = View.VISIBLE
+                etChangeName.visibility = View.GONE
+                ibtDone.visibility = View.GONE
+
+                tvName.text = USER.username
+            }
+        }
     }
 
     private fun signOut() {
