@@ -22,7 +22,9 @@ import com.example.recipeapplication.utils.NODE_USERS
 import com.example.recipeapplication.utils.REF_DATABASE_ROOT
 import com.example.recipeapplication.utils.UIDCURRENT_UID
 import com.example.recipeapplication.utils.initUser
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.SignInMethodQueryResult
 
 class RegAuthFragment : Fragment() {
     private lateinit var binding: FragmentRegAuthBinding
@@ -46,7 +48,7 @@ class RegAuthFragment : Fragment() {
                             logIn(etEmail.text.toString(), etPassword.text.toString())
                     }
                     tvForgotPass.visibility = View.VISIBLE
-                    tvForgotPass.setOnClickListener {  }
+                    tvForgotPass.setOnClickListener { resetPass(etEmail.text.toString()) }
                 }
 
                 getString(R.string.sign_up) ->
@@ -84,6 +86,24 @@ class RegAuthFragment : Fragment() {
             return false
         }
         return true
+    }
+
+    private fun resetPass(email: String) {
+        AUTH.sendPasswordResetEmail(email).addOnCompleteListener {
+            if (it.isSuccessful) {
+                Toast.makeText(
+                    context,
+                    getString(R.string.toast_msg_sending_letter_successfully),
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                Toast.makeText(
+                    context,
+                    getString(R.string.toast_msg_change_name_field),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
     }
 
     private fun createAccount(email: String, password: String){

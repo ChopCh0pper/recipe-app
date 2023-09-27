@@ -10,7 +10,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import com.example.recipeapplication.MainActivity
 import com.example.recipeapplication.MainViewModel
 import com.example.recipeapplication.R
 import com.example.recipeapplication.databinding.FragmentLogInBinding
@@ -22,14 +21,13 @@ import com.example.recipeapplication.utils.UIDCURRENT_UID
 import com.example.recipeapplication.utils.USER
 import com.example.recipeapplication.utils.initUser
 import com.google.firebase.auth.FirebaseUser
-import com.theartofdev.edmodo.cropper.CropImage
-import com.theartofdev.edmodo.cropper.CropImageView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+
 
 class LogInFragment : Fragment() {
     private lateinit var binding: FragmentLogInBinding
@@ -80,16 +78,9 @@ class LogInFragment : Fragment() {
         btAboutUs.setOnClickListener { navController.navigate(R.id.action_logInFragment_to_aboutUsFragment) }
         ibtChangeName.setOnClickListener { updateFieldName(tvName.visibility) }
         ibtDone.setOnClickListener { changeUserName() }
-        cvAvatar.setOnClickListener { changeAvatar() }
+        cvAvatar.setOnClickListener {  }
     }
 
-    private fun changeAvatar() {
-        CropImage.activity()
-            .setAspectRatio(1, 1)
-            .setRequestedSize(600, 600)
-            .setCropShape(CropImageView.CropShape.OVAL)
-            .start(activity as MainActivity)
-    }
 
     private fun changeUserName() {
         val name = binding.etChangeName.text.toString()
