@@ -23,4 +23,6 @@
     <string name="toast_msg_sending_letter_successfully">The letter has been sent.</string>
     <string name="toast_msg_sending_letter_failed">An error has occurred, please try again later.</string>
     <string name="toast_msg_change_name_field">The field must not be empty.</string>
+    <string name="toast_msg_existence_of_email_true">A user with such an email already exists.</string>
+    <string name="toast_msg_existence_of_email_false">There is no user with such mail.</string>
 </resources>

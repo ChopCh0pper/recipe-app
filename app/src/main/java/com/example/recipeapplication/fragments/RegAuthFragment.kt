@@ -23,6 +23,7 @@ import com.example.recipeapplication.utils.REF_DATABASE_ROOT
 import com.example.recipeapplication.utils.UIDCURRENT_UID
 import com.example.recipeapplication.utils.initUser
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.SignInMethodQueryResult
 
@@ -44,17 +45,17 @@ class RegAuthFragment : Fragment() {
             when(it) {
                 getString(R.string.log_in) -> {
                     bt.setOnClickListener {
-                        if (validityCheck(etEmail, etPassword))
-                            logIn(etEmail.text.toString(), etPassword.text.toString())
+
                     }
                     tvForgotPass.visibility = View.VISIBLE
-                    tvForgotPass.setOnClickListener { resetPass(etEmail.text.toString()) }
+                    tvForgotPass.setOnClickListener {
+
+                    }
                 }
 
                 getString(R.string.sign_up) ->
                     bt.setOnClickListener {
-                        if (validityCheck(etEmail, etPassword))
-                            createAccount(etEmail.text.toString(), etPassword.text.toString())
+
                     }
             }
         }
@@ -72,20 +73,48 @@ class RegAuthFragment : Fragment() {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(this.text.toString()).matches()
     }
 
-    private fun validityCheck(email: EditText, password: EditText): Boolean {
-        if (!email.isEmailValid() || password.text.isEmpty()) {
-            email.backgroundTintList = ColorStateList
-                .valueOf(ContextCompat.getColor(requireContext(), R.color.errorColor))
-            password.backgroundTintList = ColorStateList
-                .valueOf(ContextCompat.getColor(requireContext(), R.color.errorColor))
-            Toast.makeText(
-                requireContext(),
-                getString(R.string.toast_msg_validityCheck),
-                Toast.LENGTH_SHORT
-            ).show()
-            return false
+    private fun invalidityMessage() = with(binding) {
+        etEmail.backgroundTintList = ColorStateList
+            .valueOf(ContextCompat.getColor(requireContext(), R.color.errorColor))
+        etPassword.backgroundTintList = ColorStateList
+            .valueOf(ContextCompat.getColor(requireContext(), R.color.errorColor))
+        Toast.makeText(
+            requireContext(),
+            getString(R.string.toast_msg_validityCheck),
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+
+    private fun checkEmailExists(email: String): Boolean {
+        var result = false
+        if(email != "") {
+            AUTH.fetchSignInMethodsForEmail(email).addOnSuccessListener {
+                val signInMethods = it.signInMethods!!
+                result = signInMethods.isNotEmpty()
+            }
         }
-        return true
+        return result
+    }
+
+    private fun existenceOfMailMessage(existence: Boolean) {
+        binding.etEmail.backgroundTintList = ColorStateList
+            .valueOf(ContextCompat.getColor(requireContext(), R.color.errorColor))
+        when(existence) {
+            true -> {
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.toast_msg_existence_of_email_true),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+            false -> {
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.toast_msg_existence_of_email_false),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
     }
 
     private fun resetPass(email: String) {
