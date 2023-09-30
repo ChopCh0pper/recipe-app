@@ -2,6 +2,7 @@ package com.example.recipeapplication.fragments
 
 import android.content.res.ColorStateList
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -42,21 +43,54 @@ class RegAuthFragment : Fragment() {
         model.btClickedProfileFragment.observe(viewLifecycleOwner) {
             bt.text = it
 
-            when(it) {
+            when (it) {
                 getString(R.string.log_in) -> {
                     bt.setOnClickListener {
-
+                        if (etEmail.isEmailValid() && etPassword.text.isNotEmpty()) {
+                            checkEmailExists(etEmail.text.toString()) { existence ->
+                                if (existence) {
+                                    logIn(etEmail.text.toString(), etPassword.text.toString())
+                                } else {
+                                    existenceOfMailMessage(existence)
+                                }
+                            }
+                        } else {
+                            invalidityMessage()
+                        }
                     }
+
                     tvForgotPass.visibility = View.VISIBLE
                     tvForgotPass.setOnClickListener {
-
+                        if (etEmail.isEmailValid()) {
+                            checkEmailExists(etEmail.text.toString()) { existence ->
+                                if (existence) {
+                                    resetPass(etEmail.text.toString())
+                                } else {
+                                    existenceOfMailMessage(existence)
+                                }
+                            }
+                        }
                     }
                 }
 
                 getString(R.string.sign_up) ->
                     bt.setOnClickListener {
-
+                        if (etEmail.isEmailValid() && etPassword.text.isNotEmpty()) {
+                            checkEmailExists(etEmail.text.toString()) { existence ->
+                                if (!existence) {
+                                    createAccount(
+                                        etEmail.text.toString(),
+                                        etPassword.text.toString()
+                                    )
+                                } else {
+                                    existenceOfMailMessage(existence)
+                                }
+                            }
+                        } else {
+                            invalidityMessage()
+                        }
                     }
+
             }
         }
     }
@@ -85,21 +119,20 @@ class RegAuthFragment : Fragment() {
         ).show()
     }
 
-    private fun checkEmailExists(email: String): Boolean {
-        var result = false
-        if(email != "") {
-            AUTH.fetchSignInMethodsForEmail(email).addOnSuccessListener {
-                val signInMethods = it.signInMethods!!
-                result = signInMethods.isNotEmpty()
-            }
+    private fun checkEmailExists(email: String, callback: (Boolean) -> Unit) {
+        AUTH.fetchSignInMethodsForEmail(email).addOnSuccessListener {
+            val signInMethods = it.signInMethods!!
+            val result = signInMethods.isNotEmpty()
+            Log.d("existence", result.toString())
+            callback(result)
         }
-        return result
     }
+
 
     private fun existenceOfMailMessage(existence: Boolean) {
         binding.etEmail.backgroundTintList = ColorStateList
             .valueOf(ContextCompat.getColor(requireContext(), R.color.errorColor))
-        when(existence) {
+        when (existence) {
             true -> {
                 Toast.makeText(
                     requireContext(),
@@ -107,6 +140,7 @@ class RegAuthFragment : Fragment() {
                     Toast.LENGTH_SHORT
                 ).show()
             }
+
             false -> {
                 Toast.makeText(
                     requireContext(),
@@ -135,7 +169,7 @@ class RegAuthFragment : Fragment() {
         }
     }
 
-    private fun createAccount(email: String, password: String){
+    private fun createAccount(email: String, password: String) {
         AUTH.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener {
                 if (it.isSuccessful) {
@@ -150,7 +184,8 @@ class RegAuthFragment : Fragment() {
                     val dataMap = mutableMapOf<String, Any>()
                     dataMap[CHILD_ID] = UIDCURRENT_UID
                     dataMap[CHILD_USERNAME] = UIDCURRENT_UID
-                    REF_DATABASE_ROOT.child(NODE_USERS).child(UIDCURRENT_UID).updateChildren(dataMap)
+                    REF_DATABASE_ROOT.child(NODE_USERS).child(UIDCURRENT_UID)
+                        .updateChildren(dataMap)
                     initUser()
                     sendEmailVerification(user!!)
                 } else {
@@ -190,6 +225,7 @@ class RegAuthFragment : Fragment() {
                 }
             }
     }
+
     companion object {
         @JvmStatic
         fun newInstance() = RegAuthFragment()
