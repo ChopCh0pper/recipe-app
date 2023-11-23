@@ -2,7 +2,6 @@ package com.example.recipeapplication.fragments
 
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -21,12 +20,9 @@ import com.example.recipeapplication.utils.CHILD_ID
 import com.example.recipeapplication.utils.CHILD_USERNAME
 import com.example.recipeapplication.utils.NODE_USERS
 import com.example.recipeapplication.utils.REF_DATABASE_ROOT
-import com.example.recipeapplication.utils.UIDCURRENT_UID
+import com.example.recipeapplication.utils.CURRENT_UID
 import com.example.recipeapplication.utils.initUser
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.SignInMethodQueryResult
 
 class RegAuthFragment : Fragment() {
     private lateinit var binding: FragmentRegAuthBinding
@@ -123,7 +119,6 @@ class RegAuthFragment : Fragment() {
         AUTH.fetchSignInMethodsForEmail(email).addOnSuccessListener {
             val signInMethods = it.signInMethods!!
             val result = signInMethods.isNotEmpty()
-            Log.d("existence", result.toString())
             callback(result)
         }
     }
@@ -180,11 +175,11 @@ class RegAuthFragment : Fragment() {
                     ).show()
                     val user = AUTH.currentUser
                     model.user.value = user
-                    UIDCURRENT_UID = AUTH.currentUser?.uid.toString()
+                    CURRENT_UID = AUTH.currentUser?.uid.toString()
                     val dataMap = mutableMapOf<String, Any>()
-                    dataMap[CHILD_ID] = UIDCURRENT_UID
-                    dataMap[CHILD_USERNAME] = UIDCURRENT_UID
-                    REF_DATABASE_ROOT.child(NODE_USERS).child(UIDCURRENT_UID)
+                    dataMap[CHILD_ID] = CURRENT_UID
+                    dataMap[CHILD_USERNAME] = CURRENT_UID
+                    REF_DATABASE_ROOT.child(NODE_USERS).child(CURRENT_UID)
                         .updateChildren(dataMap)
                     initUser()
                     sendEmailVerification(user!!)
@@ -212,7 +207,7 @@ class RegAuthFragment : Fragment() {
             .addOnCompleteListener {
                 if (it.isSuccessful) {
                     val user = AUTH.currentUser
-                    UIDCURRENT_UID = AUTH.currentUser?.uid.toString()
+                    CURRENT_UID = AUTH.currentUser?.uid.toString()
                     initUser()
                     model.user.value = user
                     navController.navigate(R.id.action_RegAuthFragment_to_logInFragment)
