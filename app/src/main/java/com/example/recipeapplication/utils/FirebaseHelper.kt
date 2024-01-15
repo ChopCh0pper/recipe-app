@@ -3,6 +3,7 @@ package com.example.recipeapplication.utils
 import android.util.Log
 import com.example.recipeapplication.models.Recipe
 import com.example.recipeapplication.models.User
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -51,6 +52,12 @@ fun initUser() {
         .addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 USER = snapshot.getValue(User::class.java) ?: User()
+
+                // Достаем список recipes
+                val recipes = snapshot.child("recipes").children
+                for (recipe in recipes) {
+                    USER.recipes.add(recipe.getValue(String::class.java) ?: "")
+                }
             }
 
             override fun onCancelled(error: DatabaseError) {}
@@ -58,44 +65,16 @@ fun initUser() {
         })
 }
 
-//fun updateUserRecipesList(onComplete: () -> Unit) {
-//    val recipeList: MutableList<String> = mutableListOf()
-//
-//    REF_DATABASE_ROOT.child(NODE_USERS).child(CURRENT_UID).child(CHILD_USER_RECIPES)
-//        .addListenerForSingleValueEvent(object : ValueEventListener {
-//            override fun onDataChange(snapshot: DataSnapshot) {
-//                if (snapshot.exists()) {
-//                    for (recipeSnapshot in snapshot.children) {
-//                        val recipeId = recipeSnapshot.getValue(String::class.java)
-//                        if (recipeId != null) {
-//                            recipeList.add(recipeId)
-//                        }
-//                    }
-//                }
-//                USER.recipes.addAll(recipeList)
-//                Log.d("USER.recipes", USER.recipes.toString())
-//
-//                // Вызываем onComplete, чтобы уведомить об окончании загрузки данных
-//                onComplete()
-//            }
-//
-//            override fun onCancelled(error: DatabaseError) {
-//                // Обработка ошибок, если необходимо
-//            }
-//        })
-//}
+fun initRecipe(recipeId: String, onCompleteListener: (Recipe) -> Unit) {
+    REF_DATABASE_ROOT.child(NODE_RECIPES).child(recipeId)
+        .addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                RECIPE = snapshot.getValue(Recipe::class.java) ?: Recipe()
+                onCompleteListener(RECIPE)
+            }
 
-//fun initRecipe(recipeId: String, onComplete: (Recipe) -> Unit) {
-//    REF_DATABASE_ROOT.child(NODE_RECIPES).child(recipeId)
-//        .addListenerForSingleValueEvent(object : ValueEventListener {
-//            override fun onDataChange(snapshot: DataSnapshot) {
-//                RECIPE = snapshot.getValue(Recipe::class.java) ?: Recipe()
-//                onComplete(RECIPE)
-//                Log.d("RECIPE", RECIPE.toString())
-//            }
-//
-//            override fun onCancelled(error: DatabaseError) {
-//                // Обработка ошибок, если необходимо
-//            }
-//        })
-//}
+            override fun onCancelled(error: DatabaseError) {
+                // Обработка ошибок, если необходимо
+            }
+        })
+}
