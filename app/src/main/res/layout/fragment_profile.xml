@@ -20,9 +20,10 @@
             android:textSize="18sp"
             app:layout_constraintBottom_toTopOf="@id/btLogIn"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"/>
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginBottom="5dp"/>
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btLogIn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -30,15 +31,22 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="@id/tvDescription"
             app:layout_constraintRight_toRightOf="@id/tvDescription"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:background="@drawable/bt_bg"
             android:text="@string/log_in" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btSignUp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/sign_up"
             app:layout_constraintLeft_toLeftOf="@id/btLogIn"
             app:layout_constraintRight_toRightOf="@id/btLogIn"
-            app:layout_constraintTop_toBottomOf="@id/btLogIn"/>
+            app:layout_constraintTop_toBottomOf="@id/btLogIn"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:background="@drawable/bt_bg"
+            android:layout_marginTop="5dp"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

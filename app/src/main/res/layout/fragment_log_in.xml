@@ -32,7 +32,8 @@
             android:text="@string/resend"
             app:layout_constraintLeft_toLeftOf="@id/tvConfirmEmail"
             app:layout_constraintRight_toRightOf="@id/tvConfirmEmail"
-            app:layout_constraintTop_toBottomOf="@id/tvConfirmEmail" />
+            app:layout_constraintTop_toBottomOf="@id/tvConfirmEmail"
+            android:layout_marginTop="5dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -1,26 +1,23 @@
 package com.example.recipeapplication.fragments
 
 import android.os.Bundle
-import kotlinx.coroutines.*
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.recipeapplication.R
 import com.example.recipeapplication.adapters.RecipeAdapter
 import com.example.recipeapplication.databinding.FragmentMyRecipesBinding
 import com.example.recipeapplication.models.Recipe
-import com.example.recipeapplication.tests.testForAdapter
-import com.example.recipeapplication.tests.testForDB
-import com.example.recipeapplication.utils.RECIPE
 import com.example.recipeapplication.utils.USER
 import com.example.recipeapplication.utils.initRecipe
 
 class MyRecipesFragment : Fragment() {
     private lateinit var binding: FragmentMyRecipesBinding
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,8 +29,9 @@ class MyRecipesFragment : Fragment() {
     }
 
     private fun initFields() = with(binding) {
+        navController = Navigation.findNavController(requireView())
         ibtAddRecipe.setOnClickListener {
-            testForDB()
+            navController.navigate(R.id.action_myRecipesFragment_to_addRecipe)
         }
         rvRecipes.apply {
             layoutManager = GridLayoutManager(context, 2)
@@ -61,11 +59,6 @@ class MyRecipesFragment : Fragment() {
             }
         }
     }
-
-
-
-
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

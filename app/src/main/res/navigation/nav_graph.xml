@@ -65,7 +65,11 @@
         android:id="@+id/myRecipesFragment"
         android:name="com.example.recipeapplication.fragments.MyRecipesFragment"
         android:label="fragment_my_recipes"
-        tools:layout="@layout/fragment_my_recipes" />
+        tools:layout="@layout/fragment_my_recipes" >
+        <action
+            android:id="@+id/action_myRecipesFragment_to_addRecipe"
+            app:destination="@id/addRecipe" />
+    </fragment>
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.example.recipeapplication.fragments.SettingsFragment"
@@ -76,4 +80,9 @@
         android:name="com.example.recipeapplication.fragments.AboutUsFragment"
         android:label="fragment_about_us"
         tools:layout="@layout/fragment_about_us" />
+    <fragment
+        android:id="@+id/addRecipe"
+        android:name="com.example.recipeapplication.fragments.AddRecipe"
+        android:label="fragment_add_recipe"
+        tools:layout="@layout/fragment_add_recipe" />
 </navigation>
